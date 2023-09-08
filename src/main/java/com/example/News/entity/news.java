@@ -14,21 +14,24 @@ import javax.persistence.Table;
 public class news {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	//新聞id
+	// ニュースid
 	@Column(name = "news_id")
 	private Integer newsId;
-	//新聞標題
+	// ニュースタイトル
 	@Column(name = "title")
 	private String title;
-	//新聞內容
+	// ニュースコンテンツ
 	@Column(name = "content")
 	private String content;
-	//新聞發布時間
+	// ニュース発表時間
 	@Column(name = "public_time")
 	private LocalDate publicTime;
-	//新聞類別
+	// カテゴリ
+	@Column(name = "parent_category")
+	private String parentCategory;
+	// サブカテゴリ
 	@Column(name = "category")
-	private String category; 
+	private String category;
 
 	public String getCategory() {
 		return category;
@@ -41,6 +44,17 @@ public class news {
 	public news() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+//	public news(String string, String string2, LocalDate now, String string3, String string4) {
+//		// TODO Auto-generated constructor stub
+//	}
+	public news(String title, String content, LocalDate publicTime, String category, String parentCategory) {
+	    this.title = title;
+	    this.content = content;
+	    this.publicTime = publicTime;
+	    this.category = category; // 设置 category 属性
+	    this.parentCategory = parentCategory;
 	}
 
 	public Integer getNewsId() {
@@ -74,5 +88,14 @@ public class news {
 	public void setPublicTime(LocalDate publicTime) {
 		this.publicTime = publicTime;
 	}
+
+	public String getParentCategory() {
+		return parentCategory;
+	}
+
+	public void setParentCategory(String parentCategory) {
+		this.parentCategory = parentCategory;
+	}
+	
 
 }

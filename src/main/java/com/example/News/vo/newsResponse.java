@@ -2,6 +2,8 @@ package com.example.News.vo;
 
 import java.time.LocalDate;
 
+import com.example.Newsl.constants.RtnCode;
+
 public class newsResponse {
 	
 	private String message;
@@ -10,10 +12,23 @@ public class newsResponse {
 	private LocalDate publicTime;
 	private Integer newsId;
 	private String category;
+	private String parentCategory;
 	
 
 	
 	
+	
+
+	
+
+	public String getParentCategory() {
+		return parentCategory;
+	}
+
+	public void setParentCategory(String parentCategory) {
+		this.parentCategory = parentCategory;
+	}
+
 	public String getCategory() {
 		return category;
 	}
@@ -71,6 +86,11 @@ public class newsResponse {
 
 	public newsResponse(String string) {
 		// TODO Auto-generated constructor stub
+	}
+
+	public void setMessage(RtnCode empty) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

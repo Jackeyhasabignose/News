@@ -6,15 +6,15 @@ import com.example.News.vo.newsRequest;
 import com.example.News.vo.newsResponse;
 
 public interface newsService {
-	//·s¼W®ø®§
+	//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¿½åŠ 
 	public newsResponse AddNews(newsRequest request);
-	//§ä©Ò¦³®ø®§
+	//ã™ã¹ã¦ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¤œç´¢
 	public List<newsResponse> FindAllNews();
-	//ÂÇ¥Ñid§ä®ø®§
+	//IDã§ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¤œç´¢
 	public newsResponse FindNewsById(newsRequest request);
-	//ÂÇ¥Ñid­×§ï®ø®§
+	//IDã§ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç·¨é›†
 	public newsResponse AlterNews(newsRequest request);
-	//§R°£®ø®§
+	//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‰Šé™¤
 	public newsResponse DeleteNews(newsRequest request);
 
 }
