@@ -1,25 +1,92 @@
 package com.example.News.vo;
 
-import java.time.LocalDate;
 
-import com.example.Newsl.constants.RtnCode;
+import java.time.LocalDateTime;
+
+import com.example.Newsl.constants.Msg;
 
 public class newsResponse {
 	
-	private String message;
-	private String title;
-	private String content;
-	private LocalDate publicTime;
-	private Integer newsId;
-	private String category;
-	private String parentCategory;
+	
+	
+	
+	private String message;                   // メッセージ
+	private String title;                     // タイトル
+	private String content;                   // コンテンツ
+	private LocalDateTime publicTime;        // 公開日時
+	private Integer newsId;                  // ニュースID
+	private String category;                 // カテゴリ
+	private String parentCategory;           // 親カテゴリ
+	private String status;                   // ステータス
+	private String parentCategoryName;       // 親カテゴリ名
+	private String categoryName;             // カテゴリ名
+	private Integer parentCategoryId;        // 親カテゴリID
+	private Integer categoryId;              // カテゴリID
+	private String subTitle;                 // サブタイトル
+	private String formattedDate;
+	
+	
+
+    
+    
+    
+	
+	
+	
+	
 	
 
 	
-	
-	
+
+	public String getFormattedDate() {
+		return formattedDate;
+	}
 
 	
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
+
+	public Integer getParentCategoryId() {
+		return parentCategoryId;
+	}
+
+	public void setParentCategoryId(Integer parentCategoryId) {
+		this.parentCategoryId = parentCategoryId;
+	}
+
+	public Integer getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getParentCategoryName() {
+		return parentCategoryName;
+	}
+
+	public void setParentCategoryName(String parentCategoryName) {
+		this.parentCategoryName = parentCategoryName;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
 
 	public String getParentCategory() {
 		return parentCategory;
@@ -61,11 +128,11 @@ public class newsResponse {
 		this.content = content;
 	}
 
-	public LocalDate getPublicTime() {
+	public LocalDateTime getPublicTime() {
 		return publicTime;
 	}
 
-	public void setPublicTime(LocalDate publicTime) {
+	public void setPublicTime(LocalDateTime publicTime) {
 		this.publicTime = publicTime;
 	}
 
@@ -88,10 +155,26 @@ public class newsResponse {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void setMessage(RtnCode empty) {
+	public void setMessage(Msg empty) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void setStatus(String status) {
+	    this.status = status;
+	}
+
+
+
+	public String setFormattedDate(String formattedDate) {
+	    this.formattedDate = formattedDate;
+	    return formattedDate; // 返回设置的日期值
+	}
+
+
+
+	
+
 	
 
 }

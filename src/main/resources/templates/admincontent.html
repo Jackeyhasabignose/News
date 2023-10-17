@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- ここにHTMLヘッダーの内容を配置 -->
+<link rel="stylesheet" th:href="@{/css/content.css}">
+</head>
+<body>
+	<a th:href="@{/back}" class="back-link">ホーム</a>
+	<div class="news-content">
+		<div class="news-header">
+			<h2
+				th:text="${newsItem != null ? '[' + newsItem.parentCategory + '] [' + newsItem.category + '] ' + newsItem.title +
+            (newsItem.subTitle != null ? ' - ' + newsItem.subTitle : '') : ''}"></h2>
+			<p th:text="${formattedDate != null ? formattedDate : ''}"></p>
+
+		</div>
+		<div class="news-body">
+			<p th:text="${newsItem != null ? newsItem.content : ''}"></p>
+		</div>
+	</div>
+
+	<!-- <body> タグの底部にフッターを追加 -->
+	<footer class="footer">
+		<p>Copyright © 2023 あなたの会社。全著作権所有。</p>
+	</footer>
+
+</body>
+</html>

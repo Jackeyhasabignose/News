@@ -14,37 +14,42 @@ import com.example.News.service.ifs.newsService;
 import com.example.News.vo.newsRequest;
 import com.example.News.vo.newsResponse;
 
-
 @CrossOrigin
 @RestController
 public class newsController {
-	@Autowired 
+	
+	
+	@Autowired
 	public newsService newsService;
-	//·s¼W®ø®§
+
+	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¿½åŠ 
 	@PostMapping(value = "Add_news")
 	public newsResponse AddNews(@RequestBody newsRequest request) {
 		return newsService.AddNews(request);
 	}
-	//§R°£®ø®§
+
+	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‰Šé™¤
 	@PostMapping(value = "Delete_news")
 	public newsResponse DeleteNews(@RequestBody newsRequest request) {
 		return newsService.DeleteNews(request);
 	}
-	//ÂÇ¥Ñid§ä®ø®§
+
+	// IDã§ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¤œç´¢
 	@PostMapping(value = "Find_news_by_id")
 	public newsResponse FindNewsById(@RequestBody newsRequest request) {
 		return newsService.FindNewsById(request);
 	}
-	//§ä©Ò¦³®ø®§
+
+	// ã™ã¹ã¦ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¤œç´¢
 	@GetMapping(value = "Find_all_news")
 	public List<newsResponse> FindAllNews() {
 		return newsService.FindAllNews();
 	}
-	//ÂÇ¥Ñid­×§ï®ø®§
+
+	// IDã§ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç·¨é›†
 	@PostMapping(value = "Alter_news")
 	public newsResponse AlterNews(@RequestBody newsRequest request) {
 		return newsService.AlterNews(request);
 	}
-	
 
 }

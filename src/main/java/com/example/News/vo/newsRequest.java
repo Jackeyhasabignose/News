@@ -1,44 +1,33 @@
 package com.example.News.vo;
 
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class newsRequest {
-	private String title;
-	private String content;
-	private LocalDate publicTime;
-	private Integer newsId;
-	private String category;
-	private String parentCategory;
+	
+	private String title;                   // タイトル
+	private String content;                 // コンテンツ
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private LocalDateTime publicTime;      // 公開日時
+	private Integer newsId;                // ニュースID
+	private List<Integer> newsIds;         // ニュースIDのリスト
+	private String status;                 // ステータス
+	private String categoryName;           // カテゴリ名
+	private String parentCategoryName;     // 親カテゴリ名
+	private String subTitle;               // サブタイトル
+
 	
 	
 	
 	
-	
-	public newsRequest(String title, String content, LocalDate publicTime, String category, String parentCategory) {
-		super();
-		this.title = title;
-		this.content = content;
-		this.publicTime = publicTime;
-		this.category = category;
-		this.parentCategory = parentCategory;
+	public String getSubTitle() {
+		return subTitle;
 	}
-	public String getParentCategory() {
-		return parentCategory;
-	}
-	public void setParentCategory(String parentCategory) {
-		this.parentCategory = parentCategory;
-	}
-	public String getCategory() {
-		return category;
-	}
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	public Integer getNewsId() {
-		return newsId;
-	}
-	public void setNewsId(Integer newsId) {
-		this.newsId = newsId;
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
 	}
 	public String getTitle() {
 		return title;
@@ -52,23 +41,56 @@ public class newsRequest {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	public LocalDate getPublicTime() {
+	public LocalDateTime getPublicTime() {
 		return publicTime;
 	}
-	public void setPublicTime(LocalDate publicTime) {
+	public void setPublicTime(LocalDateTime publicTime) {
 		this.publicTime = publicTime;
 	}
-	
-	
-	public newsRequest(String string, String string2, String string3, String string4) {
-		super();
-		// TODO Auto-generated constructor stub
+	public Integer getNewsId() {
+		return newsId;
+	}
+	public void setNewsId(Integer newsId) {
+		this.newsId = newsId;
+	}
+	public List<Integer> getNewsIds() {
+		return newsIds;
+	}
+	public void setNewsIds(List<Integer> newsIds) {
+		this.newsIds = newsIds;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getCategoryName() {
+		return categoryName;
+	}
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+	public String getParentCategoryName() {
+		return parentCategoryName;
+	}
+	public void setParentCategoryName(String parentCategoryName) {
+		this.parentCategoryName = parentCategoryName;
 	}
 	public newsRequest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	public boolean isIsPreviewVisible() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
+	
+	
+	
+
 	
 
 }

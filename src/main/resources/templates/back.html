@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ニュース管理ページ</title>
+    <!-- 必要であればここにスタイルシートのリンクを追加 -->
+    <link rel="stylesheet" href="css/back.css">
+</head>
+<body>
+    <div class="oo">
+        <a th:href="@{/home}">ユーザーページ</a>
+    </div>
+
+    <form action="/back" method="GET">
+        <div class="search">
+            <input type="text" placeholder="タイトルを検索" name="searchTitle" id="searchTitle" />
+
+            <label for="startDate">開始日：</label>
+            <input type="date" name="startDate" id="startDatePicker" onchange="submitForm(event)" />
+
+            <label for="endDate">終了日：</label>
+            <input type="date" name="endDate" id="endDatePicker" onchange="submitForm()" />
+
+            <input type="hidden" name="selectedDate" id="selectedDate" />
+
+            <label for="searchParentCategory">大カテゴリ：</label>
+            <select name="searchParentCategory" id="searchParentCategory">
+                <option value="">すべて</option>
+                <option th:each="parentCategory : ${parentCategoriesWithNewsCount}"
+                    th:value="${parentCategory.parentCategoryName}"
+                    th:text="${parentCategory.parentCategoryName}"></option>
+            </select>
+
+            <label for="searchCategory">小カテゴリ：</label>
+            <select name="searchCategory" id="searchCategory">
+                <option value="">すべて</option>
+                <option th:each="category : ${categoriesWithNewsCount}"
+                    th:value="${category.categoryName}"
+                    th:text="${category.categoryName}"></option>
+            </select>
+
+            <select name="sortOrder" id="sortOrder">
+                <option value="asc">発表日が古い順にソート</option>
+                <option value="desc">発表日が新しい順にソート</option>
+            </select>
+
+            <button class="btn btn-primary me-md-2" type="submit">検索</button>
+            <a href="#" id="addNewsLink" class="btn btn-primary me-md-2">最新ニュースを追加</a>
+            <a href="#" id="editButton" class="btn btn-primary me-md-2">最新ニュースを編集</a>
+
+        </div>
+    </form>
+
+    <form action="/back/deleteNews" method="POST" id="deleteNewsForm">
+        <input type="hidden" name="newsIds" id="selectedNewsIds" />
+
+        <div class="news-list">
+            <div class="news-item" th:each="item : ${news}">
+                <h2 th:onclick="'navigateToNewsDetail(\'' + ${item.newsId} + '\')'">
+                    <input type="checkbox" name="newsIds"
+                        th:id="'selectedNewsIds_' + ${item.newsId}"
+                        th:value="${item.newsId}" onclick="event.stopPropagation();" />
+                    <span th:text="|(${item.parentCategoryName})|"></span> - 
+                    <span th:text="|(${item.categoryName})|"></span> - 
+                    <span th:text="${item.title}"></span> - 
+                    <span th:text="${item.subTitle}"></span>
+                </h2>
+                <p>
+                    発表日: <span th:text="${item.formattedDate}"></span>
+                </p>
+            </div>
+        </div>
+        <button class="btn btn-danger" type="submit">一括削除</button>
+        
+    </form>
+
+    <div class="pagination">
+        <a th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
+           th:href="@{|${#httpServletRequest.contextPath}/back?page=${pageNumber - 1}&itemsPerPage=${itemsPerPage}|}">
+           <span th:text="${pageNumber}"></span>
+        </a>
+    </div>
+
+    <form action="/back" method="get">
+        <label for="itemsPerPage">表示最新ニュース数：</label>
+        <select name="itemsPerPage" id="itemsPerPage" onchange="submitForm2()">
+            <option value="10" th:selected="${itemsPerPage == 10}">10 件</option>
+            <option value="50" th:selected="${itemsPerPage == 50}">50 件</option>
+            <option value="100" th:selected="${itemsPerPage == 100}">100 件</option>
+        </select>
+        <input type="submit" value="提出">
+    </form>
+    
+    <footer> &copy; 2023 ニュース管理ページ </footer>
+    <script src="/js/back.js"></script>
+</body>
+</html>

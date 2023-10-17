@@ -1,0 +1,42 @@
+
+
+.news-content {
+  margin: 0px 20px 0px 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  height: 370px;
+}
+
+.news-header {
+  /* タイトルと時間のスタイル設定 */
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 20px; /* タイトルのフォントサイズを設定 */
+  background-color: #ffa500;
+}
+
+/* リンクにいくつかの色のスタイルを追加 */
+.back-link {
+  color: #007bff; /* リンクのテキスト色 */
+  text-decoration: none; /* リンクの下線を削除 */
+  font-weight: bold; /* リンクのテキストを太字にする */
+  font-size: 16px; /* リンクのフォントサイズを設定 */
+}
+
+.news-body {
+  /* コンテンツのスタイル設定 */
+  color: #666;
+  font-size: 14px; /* コンテンツのフォントサイズを設定 */
+}
+
+/* フッターのスタイルを追加 */
+.footer {
+    background-color: #f5f5f5; /* 背景色を薄灰色に設定 */
+    padding: 10px; /* フッターの余白を追加 */
+    text-align: center; /* テキストを中央揃えにする */
+    color: #333; /* テキストの色を濃い灰色に設定 */
+    font-size: 12px; /* フォントサイズを設定 */
+    position: absolute; /* フッターを底部に固定する */
+    bottom: 0; /* フッターをページの底部に保つ */
+    width: 100%; /* ページ全体にフッターを広げる */
+}

@@ -16,11 +16,19 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-logging' // 添加 Spring Boot 默认的日志依赖，包括 SLF4J 和 Logback
 	// mysql-connector
 	implementation 'mysql:mysql-connector-java:8.0.31'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// open api
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+	// 更新 Jackson 数据绑定库的版本
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.0'
+    
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.4.0'
+	
 }
 
 tasks.named('test') {

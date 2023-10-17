@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ニュースプレビュー</title>
+    <!-- 必要に応じて、スタイルシートへのリンクをここに追加してください -->
+    <link rel="stylesheet" href="css/previewnews.css">
+</head>
+<body>
+    <a href="/back" class="btn btn-primary">戻る</a>
+   <div th:if="${isPreviewVisible}" class="container">
+    <div class="oo">
+        <h2>ニュースプレビュー</h2>
+        <label>親カテゴリ：</label> <span th:text="${parentCategoryName}"></span><br>
+        <label>カテゴリ：</label> <span th:text="${categoryName}"></span><br>
+        <label>選択日時：</label> <span th:text="${publicTime}"></span><br>
+        <label>タイトル：</label> <span th:text="${title}"></span><br>
+        <label>サブタイトル：</label> <span th:text="${subTitle}"></span><br>
+        <label>コンテンツ：</label>
+        <p th:text="${content}"></p>
+        <br>
+        <button type="submit" class="btn btn-danger" formaction="/back">公開</button>
+    </div>
+</div>
+
+</body>
+</html>
