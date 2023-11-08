@@ -30,5 +30,10 @@ public interface newsService {
 	public int getNewsCountByCategoryId(Integer categoryId);
 	
 	
+
+
+	
+	
+	
 	
 }

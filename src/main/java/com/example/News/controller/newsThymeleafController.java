@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 @CrossOrigin
 @Controller
 public class newsThymeleafController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(newsThymeleafController.class);
 
 	@Autowired
@@ -46,26 +46,46 @@ public class newsThymeleafController {
 	private newsService newsService;
 
 	@GetMapping("/home")
-	public String showNewsPage(Model model) {
-		List<newsResponse> newsResponseList = newsService.FindAllNews();
+	public String showNewsPage(Model model,
+	        @RequestParam(defaultValue = "1") int page,  // 默认页数为1
+	        @RequestParam(defaultValue = "10") int pageSize) {  // 默认每页显示10条数据
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		for (newsResponse item : newsResponseList) {
-			LocalDateTime publicTime = item.getPublicTime();
-			String formattedDate = publicTime.format(formatter);
-			item.setFormattedDate(formattedDate); // 将格式化后的日期添加到newsResponse对象中
-		}
+	    // 获取所有新闻
+	    List<newsResponse> newsResponseList = newsService.FindAllNews();
 
-		// 计算totalPages，假设每页显示10条数据
-		int pageSize = 10;
-		int totalItems = newsResponseList.size();
-		int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+	    // 计算总项目数
+	    int totalItems = newsResponseList.size();
 
-		model.addAttribute("news", newsResponseList);
-		model.addAttribute("totalPages", totalPages); // 添加totalPages到Model中
+	    // 讦算总页数
+	    int totalPages = (int) Math.ceil((double) totalItems / pageSize);
 
-		return "home";
+	    // 限制页数，确保它不超出范围
+	    page = Math.max(1, Math.min(page, totalPages));
+
+	    // 计算实际的起始索引和结束索引
+	    int fromIndex = (page - 1) * pageSize;
+	    int toIndex = Math.min(fromIndex + pageSize, totalItems);
+
+	    // 获取当前页的项目
+	    List<newsResponse> pagedNews = newsResponseList.subList(fromIndex, toIndex);
+
+	    // 假设你遍历pagedNews
+	    for (newsResponse item : pagedNews) {
+	        LocalDateTime publicTime = item.getPublicTime();
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	        String formattedDate = publicTime.format(formatter);
+	        item.setFormattedDate(formattedDate); // 将格式化后的日期添加到newsResponse对象中
+	    }
+
+	    model.addAttribute("news", pagedNews); // 使用分页后的新闻列表
+	    model.addAttribute("totalPages", totalPages); // 添加总页数到Model中
+	    model.addAttribute("currentPage", page); // 添加当前页数到Model中
+	    model.addAttribute("pageSize", pageSize); // 添加每页显示的项数到Model中
+
+	    return "home";
 	}
+
+
 
 	@GetMapping("/content/{newsId}")
 	public String showNewsContent(@PathVariable Long newsId, Model model) {
@@ -113,6 +133,50 @@ public class newsThymeleafController {
 		return "admincontent";
 	}
 
+	@GetMapping("/alternews/{newsId}")
+	public String showUpdateNewsForm(@PathVariable Long newsId, Model model) {
+		newsRequest request = new newsRequest();
+		request.setNewsId(newsId.intValue());
+		newsResponse newsItem = newsService.FindNewsById(request);
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+		String formattedDateTime = newsItem.getPublicTime().format(formatter);
+
+		model.addAttribute("formattedDateTime", formattedDateTime);
+
+		List<Category> categoriesWithNewsCount = categoryService.getAllCategoriesWithNewsCount();
+		model.addAttribute("categoriesWithNewsCount", categoriesWithNewsCount);
+
+		List<ParentCategory> parentCategoriesWithNewsCount = parentCategoryService
+				.getAllParentCategoriesWithNewsCount();
+		model.addAttribute("parentCategoriesWithNewsCount", parentCategoriesWithNewsCount);
+
+		model.addAttribute("newsRequest", request); // 添加 newsRequest 到模型
+		model.addAttribute("newsItem", newsItem); // 添加 newsItem 到模型
+
+		return "alternews";
+	}
+
+	@PostMapping("/alternews")
+	public String updateNews(@ModelAttribute newsRequest request, Model model) {
+		newsResponse response = newsService.AlterNews(request);
+
+		if (response.isSuccessful(response)) {
+			model.addAttribute("message", response.getMessage());
+		} else {
+			model.addAttribute("message", response.getMessage());
+		}
+
+		// 确保将 newsRequest 对象添加到模型中
+		model.addAttribute("newsRequest", request);
+
+		// 添加 newsItem 对象到模型
+		newsResponse newsItem = newsService.FindNewsById(request);
+		model.addAttribute("newsItem", newsItem);
+
+		return "redirect:/back";
+	}
+
 	@PostMapping("/back/deleteNews")
 	public String deleteNews(@RequestParam(name = "newsIds", required = false) List<Integer> selectedNewsIds) {
 		if (selectedNewsIds != null && !selectedNewsIds.isEmpty()) {
@@ -131,119 +195,133 @@ public class newsThymeleafController {
 
 	@GetMapping("/back")
 	public String adminPage(Model model, @RequestParam(required = false) String searchTitle,
-	        @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
-	        @RequestParam(required = false) String searchParentCategory,
-	        @RequestParam(required = false) String searchCategory, @RequestParam(required = false) String sortOrder,
-	        @RequestParam(defaultValue = "1") int page, // 添加一个用于分页的请求参数
-	        @RequestParam(defaultValue = "10") int pageSize,@RequestParam(defaultValue = "10", required = false) int itemsPerPage) { // 添加每页显示的项数
+			@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
+			@RequestParam(required = false) String searchParentCategory,
+			@RequestParam(required = false) String searchCategory,
+			@RequestParam(defaultValue = "desc") String sortOrder, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "10") int pageSize,
+			@RequestParam(defaultValue = "10", required = false) int itemsPerPage) {
 
-	    // 首先获取所有新闻
-	    List<newsResponse> newsResponseList = newsService.FindAllNews();
+		// 首先获取所有新闻
+		List<newsResponse> newsResponseList = newsService.FindAllNews();
 
-	    // 然后根据筛选条件进行过滤
-	    if (searchTitle != null && !searchTitle.isEmpty()) {
-	        newsResponseList = newsResponseList.stream()
-	                .filter(news -> news.getTitle().toLowerCase().contains(searchTitle.toLowerCase()))
-	                .collect(Collectors.toList());
-	    }
+		// 然后根据筛选条件进行过滤
+		if (searchTitle != null && !searchTitle.isEmpty()) {
+			newsResponseList = newsResponseList.stream()
+					.filter(news -> news.getTitle().toLowerCase().contains(searchTitle.toLowerCase()))
+					.collect(Collectors.toList());
+		}
 
-	    if ((startDate != null && !startDate.isEmpty()) || (endDate != null && !endDate.isEmpty())) {
-	        newsResponseList = newsResponseList.stream().filter(news -> {
-	            // 初始化日期范围
-	            LocalDateTime parsedStartDate = null;
-	            LocalDateTime parsedEndDate = null;
+		if ((startDate != null && !startDate.isEmpty()) || (endDate != null && !endDate.isEmpty())) {
+			newsResponseList = newsResponseList.stream().filter(news -> {
+				// 初始化日期范围
+				LocalDateTime parsedStartDate = null;
+				LocalDateTime parsedEndDate = null;
 
-	            // 解析开始日期字符串
-	            if (startDate != null && !startDate.isEmpty()) {
-	                parsedStartDate = LocalDateTime.parse(startDate + "T00:00:00"); // 添加时间部分
-	            }
+				// 解析开始日期字符串
+				if (startDate != null && !startDate.isEmpty()) {
+					parsedStartDate = LocalDateTime.parse(startDate + "T00:00:00"); // 添加时间部分
+				}
 
-	            // 解析结束日期字符串
-	            if (endDate != null && !endDate.isEmpty()) {
-	                parsedEndDate = LocalDateTime.parse(endDate + "T23:59:59"); // 添加时间部分
-	            }
+				// 解析结束日期字符串
+				if (endDate != null && !endDate.isEmpty()) {
+					parsedEndDate = LocalDateTime.parse(endDate + "T23:59:59"); // 添加时间部分
+				}
 
-	            // 检查日期范围，如果开始日期为空，则只检查结束日期，反之亦然
-	            return (parsedStartDate == null || news.getPublicTime().compareTo(parsedStartDate) >= 0)
-	                    && (parsedEndDate == null || news.getPublicTime().compareTo(parsedEndDate) <= 0);
-	        }).collect(Collectors.toList());
-	    }
+				// 检查日期范围，如果开始日期为空，则只检查结束日期，反之亦然
+				return (parsedStartDate == null || news.getPublicTime().compareTo(parsedStartDate) >= 0)
+						&& (parsedEndDate == null || news.getPublicTime().compareTo(parsedEndDate) <= 0);
+			}).collect(Collectors.toList());
+		}
 
-	    if (searchParentCategory != null && !searchParentCategory.isEmpty()) {
-	        newsResponseList = newsResponseList.stream()
-	                .filter(news -> news.getParentCategoryName().equals(searchParentCategory))
-	                .collect(Collectors.toList());
-	    }
+		if (searchParentCategory != null && !searchParentCategory.isEmpty()) {
+			newsResponseList = newsResponseList.stream()
+					.filter(news -> news.getParentCategoryName().equals(searchParentCategory))
+					.collect(Collectors.toList());
+		}
 
-	    if (searchCategory != null && !searchCategory.isEmpty()) {
-	        newsResponseList = newsResponseList.stream()
-	                .filter(news -> news.getCategoryName().equals(searchCategory))
-	                .collect(Collectors.toList());
-	    }
+		if (searchCategory != null && !searchCategory.isEmpty()) {
+			newsResponseList = newsResponseList.stream().filter(news -> news.getCategoryName().equals(searchCategory))
+					.collect(Collectors.toList());
+		}
 
-	    // 检查 sortOrder 参数，如果提供了排序顺序参数，则根据参数进行排序
-	    if ("asc".equalsIgnoreCase(sortOrder)) {
-	        newsResponseList.sort(Comparator.comparing(news -> news.getPublicTime()));
-	    } else if ("desc".equalsIgnoreCase(sortOrder)) {
-	        newsResponseList.sort(Comparator.comparing(news -> news.getPublicTime(), Comparator.reverseOrder()));
-	    }
+		// 检查 sortOrder 参数，如果提供了排序顺序参数，则根据参数进行排序
+		if ("asc".equalsIgnoreCase(sortOrder)) {
+			newsResponseList.sort(Comparator.comparing(news -> news.getPublicTime()));
+		} else if ("desc".equalsIgnoreCase(sortOrder)) {
+			newsResponseList.sort(Comparator.comparing(news -> news.getPublicTime(), Comparator.reverseOrder()));
+		}
 
-	    // 计算总项目数
-	    int totalItems = newsResponseList.size();
+		// 计算总项目数
+		int totalItems = newsResponseList.size();
 
-	    // 计算总页数
-	    int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+		// 计算总页数
+		int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
 
+		// 限制页数，确保它不超出范围
+		page = Math.max(1, Math.min(page, totalPages));
 
-	    // 限制页数，确保它不超出范围
-	    page = Math.max(1, Math.min(page, totalPages));
+		// 计算实际的起始索引和结束索引
+		int fromIndex = (page - 1) * itemsPerPage;
+		int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
 
-	    // 计算实际的起始索引和结束索引
-	    int fromIndex = (page - 1) * itemsPerPage;
-	    int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+		// 获取当前页的项目
+		List<newsResponse> pagedNews = newsResponseList.subList(fromIndex, toIndex);
 
-	    // 获取当前页的项目
-	    List<newsResponse> pagedNews = newsResponseList.subList(fromIndex, toIndex);
+		// 假设你遍历pagedNews
+		for (newsResponse item : pagedNews) {
+			LocalDateTime publicTime = item.getPublicTime();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			String formattedDate = publicTime.format(formatter);
+			item.setFormattedDate(formattedDate); // 将格式化后的日期添加到newsResponse对象中
+		}
 
-	    // 假设你遍历pagedNews
-	    for (newsResponse item : pagedNews) {
-	        LocalDateTime publicTime = item.getPublicTime();
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	        String formattedDate = publicTime.format(formatter);
-	        item.setFormattedDate(formattedDate); // 将格式化后的日期添加到newsResponse对象中
-	    }
+		// 获取所有类别数据（包括小分類）
+		List<Category> categoriesWithNewsCount = categoryService.getAllCategoriesWithNewsCount();
 
-	    // 获取所有类别数据（包括小分類）
-	    List<Category> categoriesWithNewsCount = categoryService.getAllCategoriesWithNewsCount();
+		// 添加类别数据到Model中
+		model.addAttribute("categoriesWithNewsCount", categoriesWithNewsCount);
 
-	    // 添加类别数据到Model中
-	    model.addAttribute("categoriesWithNewsCount", categoriesWithNewsCount);
+		// 获取所有大类别数据（父类别）包括新闻数量
+		List<ParentCategory> parentCategoriesWithNewsCount = parentCategoryService
+				.getAllParentCategoriesWithNewsCount();
 
-	    // 获取所有大类别数据（父类别）包括新闻数量
-	    List<ParentCategory> parentCategoriesWithNewsCount = parentCategoryService.getAllParentCategoriesWithNewsCount();
+		// 添加大类别数据到 Model 中
+		model.addAttribute("parentCategoriesWithNewsCount", parentCategoriesWithNewsCount);
 
-	    // 添加大类别数据到 Model 中
-	    model.addAttribute("parentCategoriesWithNewsCount", parentCategoriesWithNewsCount);
+		// 将数据添加到Model中，以便在Thymeleaf模板中使用
+		model.addAttribute("news", pagedNews); // 使用分页后的新闻列表
+		model.addAttribute("totalPages", totalPages); // 添加总页数到Model中
+		model.addAttribute("sortOrder", sortOrder);
+		model.addAttribute("itemsPerPage", itemsPerPage); // 传递每页显示的项数
 
-	    // 将数据添加到Model中，以便在Thymeleaf模板中使用
-	    model.addAttribute("news", pagedNews); // 使用分页后的新闻列表
-	    model.addAttribute("totalPages", totalPages); // 添加总页数到Model中
-	    model.addAttribute("sortOrder", sortOrder);
-	    model.addAttribute("itemsPerPage", itemsPerPage); // 传递每页显示的项数
-
-
-	    // 返回Thymeleaf模板的名称，例如 "back"，以渲染页面
-	    return "back";
+		// 返回Thymeleaf模板的名称，例如 "back"，以渲染页面
+		return "back";
 	}
-	
-	 
-	// 添加新闻的Web页面
+
+	// 渲染添加新闻的页面或处理添加新闻的提交
 	@GetMapping("/addnews")
-	public String showAddNewsForm() {
-		return "addnews"; // 返回用于添加新闻的Thymeleaf视图
+	public String showAddNewsPage(@ModelAttribute newsRequest request, Model model) {
+		// 获取所有类别数据（包括大类别和小类别）
+		List<Category> categoriesWithNewsCount = categoryService.getAllCategoriesWithNewsCount();
+
+		// 添加类别数据到模型中
+		model.addAttribute("categoriesWithNewsCount", categoriesWithNewsCount);
+
+		List<ParentCategory> parentCategoriesWithNewsCount = parentCategoryService
+				.getAllParentCategoriesWithNewsCount();
+		// 添加大类别数据到 Model 中
+		model.addAttribute("parentCategoriesWithNewsCount", parentCategoriesWithNewsCount);
+
+		// 如果 request 中包含新闻数据，则处理添加新闻的提交
+		if (request != null) {
+			newsResponse response = newsService.AddNews(request);
+			model.addAttribute("message", response.getMessage());
+		}
+
+		return "addnews"; // 渲染添加新闻的页面
 	}
 
-	// 处理添加新闻的提交
 	@PostMapping("/addnews")
 	public String addNews(@ModelAttribute newsRequest request, Model model) {
 		// 调用获取所有类别数据的服务方法
@@ -260,14 +338,12 @@ public class newsThymeleafController {
 		// 处理添加新闻请求并返回视图名称
 		newsResponse response = newsService.AddNews(request);
 		model.addAttribute("message", response.getMessage());
-		return "addnews"; // 返回用于显示结果的 Thymeleaf 视图
+
+		return "redirect:/back"; 
+
 	}
 	
-	 @GetMapping("/previewnews")
-	    public String showPreviewNews() {
-	        
-	        return "previewnews";
-	    }
+	
 
 	// 显示所有新闻的Web页面
 	@GetMapping("/all")
@@ -275,26 +351,6 @@ public class newsThymeleafController {
 		List<newsResponse> newsResponseList = newsService.FindAllNews();
 		model.addAttribute("news", newsResponseList);
 		return "all-news"; // 返回用于显示所有新闻的Thymeleaf视图
-	}
-	
-	
-
-	// 显示更新新闻的Web页面
-	@GetMapping("/alternews/{newsId}")
-	public String showUpdateNewsForm(@PathVariable Long newsId, Model model) {
-		newsRequest request = new newsRequest();
-		request.setNewsId(newsId.intValue());
-		newsResponse newsItem = newsService.FindNewsById(request);
-		model.addAttribute("newsItem", newsItem);
-		return "alternews"; // 返回用于更新新闻的Thymeleaf视图
-	}
-
-	// 处理更新新闻的提交
-	@PostMapping("/update")
-	public String updateNews(@ModelAttribute newsRequest request, Model model) {
-		newsResponse response = newsService.AlterNews(request);
-		model.addAttribute("message", response.getMessage());
-		return "update-news-result"; // 返回用于显示结果的Thymeleaf视图
 	}
 
 	// 显示删除新闻的Web页面

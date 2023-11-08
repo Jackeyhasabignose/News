@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最新ニュース</title>
+    <link rel="stylesheet" href="css/category.css">
+</head>
+<body>
+<a href="/back" class="btn btn-primary">戻る</a>
+    <header>
+        <h1>最新ニュース</h1>
+    </header>
+    
+    <div class="container">
+    
+        <div th:each="category : ${Categories}" class="category-block" th:attr="data-category-name=${category.categoryName}">
+            <span class="category-name" th:text="${category.categoryName + ' (最新消息數量: ' + category.newsCount + ')'}"></span>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; copyright 2023</p>
+    </footer>
+    <script src="/js/category.js"></script>
+</body>
+</html>

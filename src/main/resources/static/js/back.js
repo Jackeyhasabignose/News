@@ -35,7 +35,7 @@ function deleteSelectedNews() {
 }
 
 document.getElementById("addNewsLink").addEventListener("click", function(event) {
-  event.preventDefault(); // デフォルトのリンク動作を阻止
+  
 
   // 隠しフォームを作成
   var form = document.createElement("form");
@@ -103,4 +103,12 @@ function submitForm2(event) {
     .catch(error => {
       console.error('エラー:', error);
     });
+}
+
+
+function openEditPage(newsId) {
+    console.log("Received newsId: " + newsId); // 打印接收到的newsId
+    var editUrl = '/alternews/' + newsId;
+    console.log("Redirecting to URL: " + editUrl); // 打印重定向的URL
+    window.location.href = editUrl;
 }

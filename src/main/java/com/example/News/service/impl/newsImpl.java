@@ -1,6 +1,7 @@
 package com.example.News.service.impl;
 
 import java.time.LocalDateTime;
+
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
@@ -17,10 +18,12 @@ import com.example.News.entity.News;
 import com.example.News.repository.categoryDao;
 import com.example.News.repository.newsDao;
 import com.example.News.repository.parentCategoryDao;
+
 import com.example.News.service.ifs.newsService;
 import com.example.News.vo.newsRequest;
 import com.example.News.vo.newsResponse;
 import com.example.Newsl.constants.Msg;
+
 
 @Service
 @Transactional
@@ -125,7 +128,7 @@ public class newsImpl implements newsService {
 		String newParentCategoryName = request.getParentCategoryName();
 		String newCategoryName = request.getCategoryName();
 		String newSubTitle = request.getSubTitle();
-		LocalDateTime newPublicTime = request.getPublicTime(); // 新的 publicTime
+		LocalDateTime newPublicTime = request.getPublicTime();
 
 		try {
 			// parentCategoryDaoを使用して親カテゴリを検索
@@ -226,12 +229,12 @@ public class newsImpl implements newsService {
 			// categoryDaoを使用してカテゴリ名を検索
 			Integer categoryId = newsItem.getCategoryId();
 			String categoryName = categoryDao.findCategoryNameByCategoryId(categoryId);
-			response.setCategory(categoryName);
+			response.setCategoryName(categoryName);
 
 			// parentCategoryDaoを使用して親カテゴリ名を検索
 			Integer parentCategoryId = newsItem.getParentCategoryId();
 			String parentCategoryName = parentCategoryDao.findParentCategoryNameByParentCategoryId(parentCategoryId);
-			response.setParentCategory(parentCategoryName);
+			response.setParentCategoryName(parentCategoryName);
 
 			return response;
 		} else {
@@ -263,9 +266,5 @@ public class newsImpl implements newsService {
 		// ニュースの数を返す
 		return newsList.size();
 	}
-
-	
-
-	
 
 }

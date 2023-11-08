@@ -46,7 +46,7 @@ public class Category {
 	}
 
 	public void setCategoryId(Integer categoryId) {
-	    this.categoryId = categoryId; // 将参数值赋给实体的属性
+	    this.categoryId = categoryId; 
 	}
 
 	public Integer getParentCategoryId() {
@@ -62,7 +62,7 @@ public class Category {
 	}
 
 	public void setCategoryName(String categoryName) {
-	    this.categoryName = categoryName; // 将参数值赋给实体的属性
+	    this.categoryName = categoryName; 
 	}
 
 	public Category() {

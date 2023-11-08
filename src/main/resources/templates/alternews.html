@@ -1,54 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ニュースの編集</title>
-    <!-- 必要であればここにスタイルシートのリンクを追加 -->
-    <link rel="stylesheet" href="css/editnews.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ニュースの編集</title>
+<!-- 必要であればここにスタイルシートのリンクを追加 -->
+
 </head>
 <body>
-    <a href="/back" class="btn btn-primary">戻る</a>
-    <div class="container">
-        <div class="oo">
-            <h2>ニュースの編集</h2>
-            <form method="post" action="/alternews">
-                <!-- ニュースIDを渡すための隠しフィールドを追加 -->
-                <input type="hidden" th:field="*{newsId}" />
-                
-                <!-- 親カテゴリを繰り返してデータをレンダリング -->
-                <label for="parentCategoryName">大カテゴリ：</label>
-                <select th:field="*{parentCategoryName}">
-                    <option value="">すべて</option>
-                    <option th:each="parentCategory : ${parentCategoriesWithNewsCount}"
-                            th:value="${parentCategory.parentCategoryName}"
-                            th:text="${parentCategory.parentCategoryName}"></option>
-                </select><br><br>
-                
-                <!-- ニュースカテゴリを繰り返してデータをレンダリング -->
-                <label for="categoryName">小カテゴリ：</label>
-                <select th:field="*{categoryName}">
-                    <option value="">すべて</option>
-                    <option th:each="category : ${categoriesWithNewsCount}"
-                            th:value="${category.categoryName}"
-                            th:text="${category.categoryName}"></option>
-                </select><br><br>
-                
-                <label for="publicTime">日付の選択：</label>
-                <input type="datetime-local" th:field="*{publicTime}" required><br><br>
-                
-                <label for="title">タイトル：</label>
-                <input type="text" th:field="*{title}" class="input-field2" placeholder="タイトルを入力してください"><br><br>
-                
-                <label for="subTitle">サブタイトル：</label>
-                <input type="text" th:field="*{subTitle}" class="input-field2" placeholder="サブタイトルを入力してください"><br><br>
-                
-                <label for="content">コンテンツ：</label>
-                <textarea th:field="*{content}" class="input-field" placeholder="内容を入力してください（500文字以内）"></textarea><br>
-                
-                <button type="submit" class="btn btn-danger">更新</button>
-            </form>
-        </div>
-    </div>
+	<a href="/back" class="btn btn-primary">戻る</a>
+	<div class="container">
+		<div class="oo">
+			<h2>ニュースの編集</h2>
+			<form method="post" action="/alternews" th:object="${newsItem}">
+
+				<!-- ニュースIDを渡すための隠しフィールドを追加 -->
+				<input type="hidden" th:field="*{newsId}" />
+
+				<!-- 親カテゴリを繰り返してデータをレンダリング -->
+				<label for="parentCategoryName">大カテゴリ：</label> <select
+					th:field="*{parentCategoryName}" id="parentCategoryName"
+					class="input-field">
+
+					<option value="">すべて</option>
+					<option th:each="parentCategory : ${parentCategoriesWithNewsCount}"
+						th:value="${parentCategory.parentCategoryName}"
+						th:text="${parentCategory.parentCategoryName}"></option>
+				</select><br>
+				<br> <label for="categoryName">小カテゴリ：</label> <select
+					th:field="*{categoryName}">
+					<option value="">すべて</option>
+					<option th:each="category : ${categoriesWithNewsCount}"
+						th:value="${category.categoryName}"
+						th:text="${category.categoryName}"></option>
+				</select><br> <br> <label for="publicTime">日付の選択：</label><input
+					type="datetime-local" id="publicTime" name="publicTime"
+					th:field="*{publicTime}" th:value="${formattedDateTime}" />
+				<div>
+					Formatted DateTime: <span th:text="${formattedDateTime}"></span>
+				</div>
+
+
+
+
+
+
+
+
+
+
+				<label for="title">タイトル：</label> <input type="text"
+					th:field="*{title}" class="input-field2"
+					placeholder="タイトルを入力してください"><br> <br> <label
+					for="subTitle">サブタイトル：</label> <input type="text"
+					th:field="*{subTitle}" class="input-field2"
+					placeholder="サブタイトルを入力してください"><br> <br> <label
+					for="content">コンテンツ：</label>
+				<textarea th:field="*{content}" class="input-field"
+					placeholder="内容を入力してください（500文字以内）"></textarea>
+				<br>
+
+				<button type="submit" class="btn btn-danger">更新</button>
+				<div th:if="${message != null}" th:text="${message}" class="message"></div>
+
+
+			</form>
+		</div>
+	</div>
 </body>
 </html>

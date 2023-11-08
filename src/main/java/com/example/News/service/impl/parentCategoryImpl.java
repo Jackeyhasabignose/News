@@ -173,7 +173,7 @@ public class parentCategoryImpl implements parentCategoryService {
             String categoryName = (String) data[8];
 
             newsResponse response = new newsResponse();
-            // 他の属性を設定...
+            
             response.setNewsId(newsId);
             response.setTitle(title);
             response.setSubTitle(subTitle);

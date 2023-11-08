@@ -7,7 +7,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,7 +30,7 @@ public interface newsDao extends JpaRepository<News, Integer> {
 			@Param("categoryId") Integer categoryId, @Param("status") String status);
 
 	// すべてのニュースを取得
-	List<News> findAll();
+	 Page<News> findAll(Pageable pageable);
 
 	@Query("SELECT n.newsId, n.title, n.subTitle, n.content, n.publicTime, pc.parentCategoryId, c.categoryId, pc.parentCategoryName, c.categoryName "
 			+ "FROM com.example.News.entity.News n "

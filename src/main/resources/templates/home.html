@@ -1,35 +1,34 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ホーム</title>
-<!-- 必要に応じて、CSSスタイルをインポートし、リソースパスを変更 -->
-<link rel="stylesheet" th:href="@{/css/home.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ホーム</title> <!-- タイトル -->
+    
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
-	<div class="oo">
-		<a th:href="@{/back}">管理者ページ</a>
-	</div>
-	<div class="news-list">
-		<div class="news-item" th:each="item : ${news}">
-			<h2 th:onclick="'navigateToNewsDetail(\'' + ${item.newsId} + '\')'">
-				<span th:text="|(${item.parentCategoryName})|"></span> - <span th:text="|(${item.categoryName})|"></span> - <span th:text="${item.title}"></span> - <span th:text="${item.subTitle}"></span>
+    <div class="oo">
+        <a th:href="@{/back}">管理者ページ</a> <!-- 管理者ページへ -->
+    </div>
+    <div class="news-list">
+        <div class="news-item" th:each="item : ${news}">
+            <h2 th:onclick="'navigateToNewsDetail(\'' + ${item.newsId} + '\')'">
+                <span th:text="|(${item.parentCategoryName})|"></span> - <span th:text="|(${item.categoryName})|"></span> - <span th:text="${item.title}"></span> - <span th:text="${item.subTitle}"></span>
 
-				<!-- Thymeleafのセーフナビゲーション演算子(?.)を使用して、item.publicTimeがnullの可能性がある場合に対処 -->
-				<p>発表日: <span th:text="${item.formattedDate}"></span></p>
+                <!-- Thymeleafの安全なナビゲーション演算子(?.)を使用してitem.publicTimeがnullの場合を処理 -->
+                <p>発表日: <span th:text="${item.formattedDate}"></span></p> <!-- 発表日 -->
+            </h2>
+            
+        </div>
+    </div>
+    <div class="pagination" th:if="${totalPages != null}">
+        <!-- Thymeleafの条件判断を使用してページ番号をレンダリングし、ページ番号をクリックした際のイベントを処理 -->
+        <span th:each="page : ${#numbers.sequence(1, totalPages)}"
+            th:text="${page}" th:attr="onclick='navigateToPage(\'' + ${page} + '\')'"></span>
+    </div>
 
-			</h2>
-			<!-- ここにはニュースコンテンツに関するThymeleafのフラグメントがあるべきで、必要に応じてカスタマイズしてください -->
-		</div>
-	</div>
-	<div class="pagination" th:if="${totalPages != null}">
-    <!-- Thymeleafの条件判断を使用して、totalPagesがnullでない場合にページ番号を描画 -->
-    <span th:each="page : ${#numbers.sequence(1, totalPages)}"
-        th:text="${page}" th:onclick="|currentPage = ${page}|"></span>
-</div>
-
-	<!-- JavaScriptファイルをインポートし、必要に応じてリソースパスを変更 -->
-	<script src="/js/home.js"></script>
+   
+    <script src="/js/home.js"></script>
 </body>
 </html>

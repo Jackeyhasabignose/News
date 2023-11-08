@@ -9,7 +9,7 @@
 	<div class="news-content">
 		<div class="news-header">
 			<h2
-				th:text="${newsItem != null ? '[' + newsItem.parentCategory + '] [' + newsItem.category + '] ' + newsItem.title +
+				th:text="${newsItem != null ? '[' + newsItem.parentCategoryName + '] [' + newsItem.categoryName + '] ' + newsItem.title +
             (newsItem.subTitle != null ? ' - ' + newsItem.subTitle : '') : ''}"></h2>
 			<p th:text="${formattedDate != null ? formattedDate : ''}"></p>
 

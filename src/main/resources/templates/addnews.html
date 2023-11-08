@@ -13,6 +13,7 @@
     <div class="oo">
         <h2>最新ニュースの追加</h2>
         <form id="newsForm" method="post" action="/addnews">
+         
             <!-- parentCategories を繰り返し処理し、データをレンダリング -->
             <label for="searchParentCategory">親カテゴリ：</label> <select
                 id="searchParentCategory" name="parentCategoryName">
@@ -43,29 +44,14 @@
             <br>
 
             <div class="pp">
-                <button type="submit" class="btn btn-danger">発行</button>
-                <button type="button" class="btn btn-primary" onclick="previewNews()">プレビュー</button>
+                 <button type="submit" class="btn btn-danger">発行</button>
+                
             </div>
-            <!-- isPreviewVisible の値を格納するための非表示フィールドを追加 -->
-            <input type="hidden" id="isPreviewVisible" name="isPreviewVisible" value="false">
+              
         </form>
     </div>
 
-    <!-- プレビューエリア -->
-    <div th:if="${isPreviewVisible}" class="container">
-        <div class="oo">
-            <h2>ニュースプレビュー</h2>
-            <label>親カテゴリ：</label> <span id="previewParentCategory"></span><br>
-            <label>子カテゴリ：</label> <span id="previewCategory"></span><br>
-            <label>日付を選択：</label> <span id="previewTime"></span><br>
-            <label>タイトル：</label> <span id="previewTitle"></span><br>
-            <label>サブタイトル：</label> <span id="previewSubTitle"></span><br>
-            <label>内容：</label>
-            <p id="previewContent"></p>
-            <br>
-            <button type="submit" class="btn btn-danger" formaction="/back">発行</button>
-        </div>
-    </div>
+    
 </div>
 
 <script src="/js/addnews.js"></script>

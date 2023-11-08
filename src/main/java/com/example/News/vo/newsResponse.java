@@ -23,20 +23,34 @@ public class newsResponse {
 	private Integer parentCategoryId;        // 親カテゴリID
 	private Integer categoryId;              // カテゴリID
 	private String subTitle;                 // サブタイトル
-	private String formattedDate;
-	
-	
-
-    
-    
-    
-	
-	
+	private String formattedDate; 			 // フォーマット済みの日付	
+	private boolean isSuccess;				 // 成功したかどうか
 	
 	
 	
 
+    
+    
+    
 	
+	
+	
+	
+	
+
+	
+
+	public boolean isSuccess() {
+		return isSuccess;
+	}
+
+
+
+	public void setSuccess(boolean isSuccess) {
+		this.isSuccess = isSuccess;
+	}
+
+
 
 	public String getFormattedDate() {
 		return formattedDate;
@@ -170,6 +184,20 @@ public class newsResponse {
 	    this.formattedDate = formattedDate;
 	    return formattedDate; // 返回设置的日期值
 	}
+
+
+
+	public boolean isSuccessful(newsResponse response) {
+	    // 根据具体情况，检查 response 中的数据或状态来判断更新是否成功
+	    if (response != null) {
+	        // 假设 response 中包含一个 success 标志
+	        return response.isSuccess();
+	    } else {
+	        // 如果 response 为 null，则认为更新失败
+	        return false;
+	    }
+	}
+
 
 
 

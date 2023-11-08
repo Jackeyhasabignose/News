@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>メインカテゴリー</title>
+<link rel="stylesheet" th:href="@{/css/findNewsByParentCategory.css}">
+</head>
+<body>
+<a href="/parentCategory" class="btn btn-primary">戻る</a>
+	<header>
+		<h1>メインカテゴリー</h1>
+	</header>
+	<div class="news-list">
+		<div class="container">
+			<div th:each="newsItem : ${newsList}" class="news-item">
+				<span th:text="|(${newsItem.parentCategoryName})|"></span> - <span
+					th:text="|(${newsItem.categoryName})|"></span> - <span
+					th:text="${newsItem.title}"></span> - <span
+					th:text="${newsItem.subTitle}"></span>
+				
+
+			</div>
+		</div>
+	</div>
+	<footer>
+		<p>Copyright 2023</p>
+	</footer>
+</body>
+</html>
